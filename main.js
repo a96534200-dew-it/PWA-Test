@@ -4,7 +4,7 @@ const filenameBox = document.getElementById('file-name');
 
 const controlsContainer = document.querySelector('.top-bar');
 const KEY = 'MyNoteString';
-const [charsEl, wordsEl, linesEl] = document.querySelectorAll('.counter');
+const [counter1, counter2] = document.querySelectorAll('.counter');
 
 console.log('SW: attempting register');
 navigator.serviceWorker.register('/sw.js').then(r => console.log('reg', r)).catch(e => console.error('reg failed', e));
@@ -76,9 +76,9 @@ function importFile () {
 
 function calcStats () {
 	console.log('calcStats called')
-	charsEl.textContent = plaintext.value.length + ' characters';
-	wordsEl.textContent = plaintext.value === "" ? 0 : plaintext.value.replace(/\s+/g, ' ').split(' ').length + ' words';
-	linesEl.textContent = plaintext.value.split(/\n/).length + ' lines';
+	counter1.textContent = plaintext.value.length + ' chars';
+	counter2.textContent = plaintext.value === "" ? 0 + ' words' : plaintext.value.replace(/\s+/g, ' ').split(' ').length + ' words';
+	// counter3.textContent = plaintext.value.split(/\n/).length + ' lines';
 }
 
 function updCount () {

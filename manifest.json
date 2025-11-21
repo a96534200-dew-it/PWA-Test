@@ -4,6 +4,7 @@
     "start_url": ".",
     "display": "standalone",
     "background_color": "#e0d4b7",
+	"theme_color": "#e0d4b7",
     "description": "A simple Progressive Web App Notes",
     "icons": [
         {
