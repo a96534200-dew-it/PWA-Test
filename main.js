@@ -7,7 +7,7 @@ const KEY = 'MyNoteString';
 const [counter1, counter2] = document.querySelectorAll('.counter');
 
 console.log('SW: attempting register');
-navigator.serviceWorker.register('/sw.js').then(r => console.log('reg', r)).catch(e => console.error('reg failed', e));
+navigator.serviceWorker.register('./sw.js').then(r => console.log('reg', r)).catch(e => console.error('reg failed', e));
 
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load' , () => {
