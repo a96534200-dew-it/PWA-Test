@@ -6,12 +6,12 @@ const controlsContainer = document.querySelector('.top-bar');
 const KEY = 'MyNoteString';
 const [counter1, counter2] = document.querySelectorAll('.counter');
 
-console.log('SW: attempting register');
-navigator.serviceWorker.register('./sw.js').then(r => console.log('reg', r)).catch(e => console.error('reg failed', e));
+// console.log('SW: attempting register');
+// navigator.serviceWorker.register('./sw.js').then(r => console.log('reg', r)).catch(e => console.error('reg failed', e));
 
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load' , () => {
-		navigator.serviceWorker.register('/sw.js')
+		navigator.serviceWorker.register('./sw.js')
 				.then(registration => {
 			console.log('Service Worker registered with scope:' , registration.scope);
 		}).catch(error => {
@@ -45,7 +45,7 @@ plaintext.onkeyup = function () {
 function exportFile () {
 	const a = document.createElement('a');
 	a.href = URL.createObjectURL(new Blob([plaintext.value], { type: 'text/plain' }));
-	a.download = (filenameBox.value || 'My Note.txt').replace(/^([^.]*)$/, "$1.txt");
+	a.download = (filenameBox.value || 'My Note.md').replace(/^([^.]*)$/, "$1.md");
 	document.body.appendChild(a);
 	console.log(a.href);
 	a.click();
