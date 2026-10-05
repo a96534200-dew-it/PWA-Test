@@ -5,12 +5,13 @@
 	--col4: #473e33;	/*text*/
 	--col5: color-mix(in srgb, var(--col4), var(--col1) 50%);	/*faint text*/
 	--col-accent: #8aab55;	/*accent*/
-	--bar-height: 5vh;
-	--main-border-radius: 13px;
-	--main-margin-width: 10px;
-	--window-height: calc(100vh - var(--main-margin-width) * 2);
-	--min-height: calc(var(--main-border-radius) * 1.5);
-	--input-height: calc(var(--bar-height) - 5px - var(--main-margin-width) * 0.9)
+		--bar-height: 2rem;
+		--main-border-radius: 1rem;
+		--main-margin-width: 0.5rem;
+		--window-height: calc(100vh - var(--main-margin-width) * 2);
+		--min-height: calc(var(--main-border-radius) * 1.5);
+		--button-height: calc(var(--bar-height) * 0.75);
+		--input-height: calc(var(--button-height) - 0.25rem);
 }
 
 /* Dark theme overrides */
