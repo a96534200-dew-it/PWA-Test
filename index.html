@@ -12,14 +12,18 @@
 
 <body class="wrap">
 	<div class="top-bar">
+		<div id="save-dot" title="loading"></div>
+		<div class="spacer"></div>
 		<span class="counter-block">
 			<span class="counter">1</span>
-			<span class="counter">2</span>
 		</span>
 		<input id="file-name" placeholder="My Note.md">
 		<input type="button" class="bar-button" value="Export">
-		<input type="button" class="bar-button" value="Import">
+		<!-- <input type="button" class="bar-button" value="Import"> -->
+		<button id="modeBtn" type="button" aria-pressed="true" title="toggle markdown live view"><b>M</b>d</button>
 	</div>
 	<textarea id="plaintext" placeholder="type here"></textarea>
-	<script src="main.js"></script>
+	<div id="mdText"></div>
+	<script defer src="vendors/marked.min.js"></script>
+	<script defer src="main.js"></script>
 </body>

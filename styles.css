@@ -41,8 +41,8 @@ body{
 #plaintext {
 	height: 100%;
 	margin: 0px !important;
-	resize:none;
-	border-radius: var(--main-border-radius);
+	resize:none;		/* top-left, top-right, bottom-right, bottom-left */
+	border-radius: 0 0 var(--main-border-radius) var(--main-border-radius);
 	padding: 12px;
 	background-color: var(--col1);
 	border: 1px solid var(--col3);
@@ -66,14 +66,16 @@ body{
 	min-height: var(--min-height);
 	/* border-bottom-right-radius: var(--main-border-radius);
 	border-bottom-left-radius: var(--main-border-radius); */
-	border-radius: var(--main-border-radius);
-	margin-bottom: var(--main-margin-width);
+	border-radius: var(--main-border-radius) var(--main-border-radius) 0 0;
+	border: 1px solid var(--col3);
+	border-bottom-width: 0px;
+	margin-bottom: 0;
 	background-color: var(--col1);
 }
 
 .bar-button {
 	border: 1px solid var(--col3);
-	height: var(--bar-height);
+	height: var(--button-height);
 	margin-right: var(--main-margin-width);
 	border-radius: var(--main-border-radius);
 	background-color: var(--col1);
@@ -91,6 +93,7 @@ body{
 
 #file-name {
 	border: 1px solid var(--col3);
+	/* padding: 0px 2px 0px 2px; */
 	height: var(--input-height);
 	margin-right: var(--main-margin-width);
 	border-radius: var(--main-border-radius);
@@ -107,8 +110,6 @@ body{
 
 .counter {
 	height: var(--bar-height);
-	border-right: 1px solid var(--col3);
-	padding-right: var(--main-margin-width);
 	margin-right: var(--main-margin-width);
 	background-color: var(--col1);
 	color: var(--col5);
@@ -126,4 +127,118 @@ body{
 	align-items: center;
 	height: 15px;
 	overflow: hidden;
+}
+
+#save-dot {
+	flex:none;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background:#cfc0b0;
+	padding: 0;
+	border: none;
+	margin-left: var(--main-margin-width);
+}
+
+.spacer {
+	flex: 1;
+}
+
+.readable {
+	max-width: 70ch;
+	margin-inline: auto;
+	padding-inline: 1rem;
+}
+
+/* Markdown bullshit */
+
+.top-bar button {
+	font: inherit;
+	background: transparent;
+	color: var(--col4);
+	border: 1px solid var(--col3);
+	border-radius: var(--main-border-radius);
+	margin-right: var(--main-margin-width);
+	cursor: pointer;
+	white-space: nowrap;
+	height: var(--button-height);
+	background-color: var(--col1);
+	cursor: pointer
+}
+
+.top-bar button[aria-pressed="true"] {
+	background-color: var(--col3);
+}
+
+#mdText {
+	flex: 1;
+	overflow-y: auto;
+	height: 100%;
+	margin: 0px !important;
+	resize:none;		/* top-left, top-right, bottom-right, bottom-left */
+	border-radius: 0 0 var(--main-border-radius) var(--main-border-radius);
+	padding: 12px;
+	background-color: var(--col1);
+	border: 1px solid var(--col3);
+	color: var(--col4);
+	font-size: 15px;
+	line-height: 1.5;
+	font-family: 'Ubuntu', Arial, sans-serif;
+}
+
+#mdText .block {
+	border-radius: var(--main-border-radius);
+	padding: 2px 6px;
+	margin: 0 -6px 10px;
+	cursor: text;
+	overflow-wrap: anywhere;
+}
+
+#mdText .block:hover { background: var(--col2);}
+#mdText .block.editing { background: var(--col2);}
+#mdText .block h1 { text-align: center;}
+#mdText .block img { display: block; margin: 0 auto; max-width: 100%;}
+#mdText .block.empty-block { opacity: .75;}
+#mdText .block h1, #mdText .block h2, #mdText .block h3, #mdText .block p, #mdText .block ul, #mdText .block ol, #mdText .block pre, #mdText .block blockquote { margin: 0 0 .8em;}
+#mdText .block > :last-child { margin-bottom: 0;}
+
+#mdText .block pre {
+	padding: 8px;
+	overflow-x: auto;
+	border: 1px solid var(--col2);
+	border-radius: var(--main-border-radius);
+}
+
+#mdText .block table {
+	border-collapse: collapse;
+	margin: 0 auto 0.5em;
+	overflow-wrap: normal;
+}
+
+#mdText .block hr {
+	border: 0;
+	height: 1px;
+	background: var(--col3);
+	margin-bottom: 1em;
+	padding: 0;
+}
+
+#mdText .block th, #mdText .block td {
+	border: 1px solid var(--col3);
+	padding: 4px 10px;
+	text-align: left;
+}
+
+#mdText .block textarea.blockEdit {
+	width: 100%;
+	border: none;
+	outline: none;
+	resize: none;
+	overflow: hidden;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	padding: 0;
+	margin: 0;
+	display: block;
 }
