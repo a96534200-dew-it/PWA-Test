@@ -70,6 +70,92 @@ async function idbGetById (id) {	// Getting by ID
 	});
 }
 
+// Encryption stuffs:
+
+function setText (text, save = true) {
+	state.text = text;
+	blocks = splitBlocks(text);
+	if (!state.md) plaintext.value = text;
+	updateCount();
+	if (save) saveDebounced();
+	if (state.md && state.editing < 0) renderMd();
+}
+
+async function encKey (password, salt) {
+	const km = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]);
+	return crypto.subtle.deriveKey({name: "PBKDF2", salt, iterations: 120000, hash: "SHA-256"}, km, {name: "AES-GCM", length: 256}, false, ["encrypt", "decrypt"]);
+}
+
+function b64e (buf) {
+	const b = new Uint8Array(buf);
+	let s = "";
+	for (let i=0; i < b.length; i += 8192) s += String.fromCharCode.apply(null, b.subarray(i, i + 8192));	// WTF is even that?
+	return btoa(s);
+}
+
+function b64d (s) {
+	const bin = atob(s);
+	const b = new Uint8Array(bin.length);	// How and what?
+	for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+	return b;
+}
+
+async function refreshLockHint () {	// Self defeating for secrecy?
+	let v = null;
+	try {v= await idbGetById("vault");
+	} catch (err) {}
+	nameInput.placeholder = v ? "locked" : "untitled.txt";
+}
+
+async function lockNote (password) {
+	commitBlock(false);
+	state.editing = -1;
+	if (!state.text.trim()) {
+		nameInput.value = state.docName;
+		setDot("red", "nothing to lock");
+		return;
+	}
+	setDot("orange", "encrypting");
+	try {
+		const salt = crypto.getRandomValues(new Uint8Array(16));
+		const iv = crypto.getRandomValues(new Uint8Array(12));
+		const key = await encKey(password, salt);
+		// ct - Cypher Text, iv - Initialisation Vector
+		const ct = await crypto.subtle.encrypt({name: "AES-GCM", iv}, key, new TextEncoder().encode(state.text));
+		await idbSet ({id: "vault", name: state.noteName, data: b64e(ct), iv: b64e(iv), salt: b64e(salt), updatedAt: Date.now()});
+		nameInput.value = "";
+		state.docName = "";
+		setText("");	// used here to clear the text field	
+		// refreshLockHint();	// Is that necessary?
+		setDot("limegreen", "locked");
+	} catch (err) {
+		console.error(err);
+		nameInput.value = state.noteName;
+		setDot("red", "lock failed");
+	}
+}
+
+async function unlockNote (password) {
+	commitBlock(false);
+	state.editing = -1;
+	setDot("orange", "decrypting");
+	try {
+		const vault = await idbGetById("vault");
+		if (!vault) throw new Error("empty");
+		const key = await encKey(password, b64d(vault.salt));
+		const pt = await crypto.subtle.decrypt({name: "AES-GCM", iv: b64d(vault.iv)}, key, b64d(vault.data));
+		await idbDel("vault");
+		state.noteName = vault.name || "";
+		nameInput.value = state.noteName;
+		setText(new TextDecoder().decode(pt));
+		// refreshLockHint();	// Is it necessary?
+		setDot("limegreen", "unlcoked");
+	} catch (err) {
+		nameInput.value = state.noteName;
+		setDot("red", "wrong password");
+	}
+}
+
 // v3 upd Markdown stuff
 
 // Declaring Object Literal to store state
@@ -333,7 +419,13 @@ nameInput.addEventListener ("input", () => {
 	saveDebounced();
 });
 
-// Encrypt part controls must be here
+// Triggers Encryption
+nameInput.addEventListener ("blur", async () => {
+	const match = nameInput.value.trim().match(/^(lock|unlock)\s*:\s*([\s\S]+)$/i);	// Matches as: Group1:command Group2:pass
+	if (!match || !match[2].trim()) return;	// Set file name here!
+	if (match[1].toLowerCase() === "lock") await lockNote(match[2].trim());
+	else await unlockNote(match[2].trim());
+});
 
 nameInput.addEventListener("keydown", (e) => {
 	if (e.key === "Enter")
